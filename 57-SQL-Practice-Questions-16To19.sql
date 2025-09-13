@@ -13,7 +13,7 @@ from customers;
 Customers table for ContactTitles. Also include a
 count for each ContactTitle.
 This is similar in concept to the previous question
-ìCountries where there are customersî
+‚ÄúCountries where there are customers‚Äù
 , except we
 now want a count for each ContactTitle
 */
@@ -26,7 +26,7 @@ group by ContactTitle;
 
 
 /*
-Weíd like to show, for each product, the associated
+18. We‚Äôd like to show, for each product, the associated
 Supplier. Show the ProductID, ProductName, and
 the CompanyName of the Supplier. Sort by
 ProductID.
@@ -46,7 +46,7 @@ on p.SupplierID = s.SupplierID;
 
 
 /*
-Weíd like to show a list of the Orders that were
+19. We‚Äôd like to show a list of the Orders that were
 made, including the Shipper that was used. Show
 the OrderID, OrderDate (date only), and
 CompanyName of the Shipper, and sort by
@@ -60,4 +60,5 @@ select o.OrderId, cast(OrderDate as date) as OrderDate, s.CompanyName
 from orders o
 join shippers s
 on o.ShipVia = s.ShipperID
+
 where o.OrderID < 10300;
