@@ -1,5 +1,5 @@
 /*
-20. For this problem, we’d like to see the total number
+20. For this problem, weâ€™d like to see the total number
 of products in each category. Sort the results by the
 total number of products, in descending order.
 */
@@ -44,10 +44,10 @@ where unitsinstock < reorderlevel
 order by productId;
 
 /*
-23. Now we need to incorporate these fields—
+23. Now we need to incorporate these fieldsâ€”
 UnitsInStock, UnitsOnOrder, ReorderLevel,
-Discontinued—into our calculation. We’ll define
-“products that need reordering” with the following:
+Discontinuedâ€”into our calculation. Weâ€™ll define
+â€œproducts that need reorderingâ€ with the following:
 UnitsInStock plus UnitsOnOrder are less
 than or equal to ReorderLevel
 The Discontinued flag is false (0).
@@ -64,7 +64,7 @@ trip to visit customers, and would like to see a list
 of all customers, sorted by region, alphabetically.
 However, he wants the customers with no region
 (null in the Region field) to be at the end, instead of
-at the top, where you’d normally find the null
+at the top, where youâ€™d normally find the null
 values. Within the same region, companies should
 be sorted by CustomerID.
 */
@@ -127,15 +127,73 @@ Where
  OrderDate between '1/1/1997' and '12/31/1997'  -- Between doesn't include the orders after 00.00:00 the final day. 
 												--  Ex : 00.01 to 23.59 on 12/31/1997 will not be included
 Group By ShipCountry
-Order By AverageFreight desc;/*28. We're continuing to work on high freight charges.
+Order By AverageFreight desc;
+
+/*
+28. We're continuing to work on high freight charges.
 We now want to get the three ship countries with
 the highest average freight charges. But instead of
 filtering for a particular year, we want to use the
 last 12 months of order data, using as the end date
-the last OrderDate in Orders.*/select distinct year(orderdate)from orders;select distinct month(orderdate)from orders;select top 3 shipcountry, avg(freight)from orderswhere orderdate >= dateadd(month, -12, (select max (orderDate) from orders))group by shipcountryorder by avg(freight) desc;/*29. We're doing inventory, and need to show
+the last OrderDate in Orders.
+*/
+
+select distinct year(orderdate)
+from orders;
+
+select distinct month(orderdate)
+from orders;
+
+select top 3 
+shipcountry, avg(freight)
+from orders
+where orderdate >= dateadd(month, -12, (select max (orderDate) from orders))
+group by shipcountry
+order by avg(freight) desc;
+
+/*
+29. We're doing inventory, and need to show
 information like the below, for all orders. Sort by
-OrderID and Product ID.*/select * from employees; -- EmployeeID, LastNameselect * from [Order Details]; -- OrderID, quantityselect * from products; -- ProductNameselect * from orders;select e.employeeID, e.LastName, o.OrderID, p.productName, od.Quantityfrom Employees eleft join orders oon e.employeeId = o.employeeIdleft join [Order Details] odon o.orderId = od.orderIDleft join products p on od.ProductID = p.ProductIDorder by o.orderId, p.productId;/*30. There are some customers who have never actually
-placed an order. Show these customers.*/select * from customers;select * from orders;-- Method 1 select * from customers where CustomerID not in (select distinct CustomerID from orders);-- Method 2 select c.CustomerID, count(o.OrderID) as Ordersfrom customers cleft join orders oon c.CustomerID = o.CustomerIDgroup by c.customerIDhaving count(o.orderid) = 0;-- Method 3
+OrderID and Product ID.
+*/
+
+select * from employees; -- EmployeeID, LastName
+select * from [Order Details]; -- OrderID, quantity
+select * from products; -- ProductName
+select * from orders;
+
+select e.employeeID, e.LastName, o.OrderID, p.productName, od.Quantity
+from Employees e
+left join orders o
+on e.employeeId = o.employeeId
+left join [Order Details] od
+on o.orderId = od.orderID
+left join products p 
+on od.ProductID = p.ProductID
+order by o.orderId, p.productId;
+
+/*
+30. There are some customers who have never actually
+placed an order. Show these customers.
+*/
+
+select * from customers;
+
+select * from orders;
+
+-- Method 1 
+select * from customers 
+where CustomerID not in (select distinct CustomerID from orders);
+
+-- Method 2 
+select c.CustomerID, count(o.OrderID) as Orders
+from customers c
+left join orders o
+on c.CustomerID = o.CustomerID
+group by c.customerID
+having count(o.orderid) = 0;
+
+-- Method 3
 
 select c.customerID, o.OrderID
 from customers c
